@@ -1,6 +1,7 @@
 package moviego
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"log"
@@ -145,8 +146,13 @@ func (V Video) render() error {
 	if V.isTemp {
 		defer os.Remove(V.filePath)
 	}
+	var stderr bytes.Buffer
 
-	return V.stream.OverWriteOutput().Run()
+	err := V.stream.OverWriteOutput().WithErrorOutput(&stderr).Run()
+	if err != nil {
+		fmt.Println("ffmpeg error output:", err)
+	}
+	return err
 }
 
 func (V *Video) checkStartAndEnd(start, end float64) {
