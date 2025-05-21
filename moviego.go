@@ -150,7 +150,7 @@ func (V Video) render() error {
 
 	err := V.stream.OverWriteOutput().WithErrorOutput(&stderr).Run()
 	if err != nil {
-		fmt.Println("ffmpeg error output:", err)
+		err = errors.New(fmt.Sprintf("%s: %s", err, stderr.String()))
 	}
 	return err
 }
