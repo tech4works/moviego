@@ -207,15 +207,17 @@ func (V Video) SubClip(start, end float64) Video {
 
 func Concat(videos []Video) (Video, error) {
 	return ConcatWithArgs(videos, map[string]string{
-		"c:v":    "libx264", // Codec de vídeo H.264
-		"r":      "30",      // Taxa de quadros de 30 FPS
-		"crf":    "18",      // Qualidade constante (CRF)
-		"preset": "medium",  // Preset médio para balancear velocidade e compressão
-		"c:a":    "aac",     // Codec de áudio AAC
-		"ar":     "48000",   // Sample rate padrão para áudio (48kHz)
-		"ac":     "2",       // Número de canais (stereo)
-		"b:a":    "192k",    // Bitrate de áudio 192kbps
-		"c":      "copy",    // Copiar outros fluxos diretamente
+		"c:v":     "libx264",         // Codec de vídeo: Força o uso de H.264
+		"r":       "30",              // Taxa de quadros: 30FPS para todos os vídeos
+		"crf":     "18",              // Controle de qualidade uniforme
+		"preset":  "medium",          // Preset média para compactação e velocidade
+		"c:a":     "aac",             // Codec de áudio AAC
+		"ar":      "48000",           // Taxa de amostragem 48kHz
+		"ac":      "2",               // Stereo (2 canais de áudio)
+		"b:a":     "192k",            // Bitrate do áudio
+		"vf":      "scale=1920:1080", // Redimensiona vídeos para Full HD
+		"pix_fmt": "yuv420p",         // Garante suporte a reprodução no máximo de dispositivos
+		"g":       "30",              // GOP tamanho baseado em FPS (ex.: 30 frames)
 	})
 }
 
