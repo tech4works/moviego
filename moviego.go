@@ -196,6 +196,10 @@ func (V Video) SubClip(start, end float64) Video {
 }
 
 func Concat(videos []Video) (Video, error) {
+	return ConcatWithArgs(videos, map[string]string{"c": "copy"})
+}
+
+func ConcatWithArgs(videos []Video, args map[string]string) (Video, error) {
 	var videoParts string
 	tempFolder := ""
 
@@ -233,9 +237,13 @@ func Concat(videos []Video) (Video, error) {
 		return Video{}, finalErr
 	}
 
+	kwArgs := ffmpeg.KwArgs{}
+	for key, value := range args {
+		kwArgs[key] = value
+	}
+
 	err := ffmpeg.Input(concatStorage.Name(), ffmpeg.KwArgs{"f": "concat", "safe": "0"}).Output(
-		finalFile.Name(), ffmpeg.KwArgs{"c": "copy"},
-	).OverWriteOutput().Run()
+		finalFile.Name(), kwArgs).OverWriteOutput().Run()
 
 	if err != nil {
 		return Video{}, err
