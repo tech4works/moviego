@@ -1,10 +1,10 @@
-module github.com/mowshon/moviego
+module github.com/tech4works/moviego
 
 go 1.20
 
 require (
 	github.com/tidwall/gjson v1.14.0
-	github.com/u2takey/ffmpeg-go v0.4.1
+	github.com/u2takey/ffmpeg-go v0.5.0
 )
 
 require (

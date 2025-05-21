@@ -196,7 +196,14 @@ func (V Video) SubClip(start, end float64) Video {
 }
 
 func Concat(videos []Video) (Video, error) {
-	return ConcatWithArgs(videos, map[string]string{"c": "copy"})
+	return ConcatWithArgs(videos, map[string]string{
+		"c":      "copy",
+		"c:v":    "libx264",
+		"crf":    "18",
+		"preset": "medium",
+		"c:a":    "aac",
+		"b:a":    "192k",
+	})
 }
 
 func ConcatWithArgs(videos []Video, args map[string]string) (Video, error) {
