@@ -49,6 +49,10 @@ func (V Video) Extension() string {
 	return V.extension
 }
 
+func (V Video) Probe() string {
+	return V.probe
+}
+
 func (OutputProcess Output) Run() error {
 	return OutputProcess.video.render()
 }
