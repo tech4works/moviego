@@ -135,7 +135,14 @@ func (V Video) prepareKwArgs(ignoreThisKeywords []string) ffmpeg.KwArgs {
 }
 
 func (V Video) Output(OutputFilename string) Output {
+	return V.OutputWithArgs(OutputFilename, map[string]string{})
+}
+
+func (V Video) OutputWithArgs(OutputFilename string, args map[string]string) Output {
 	compileKwArgs := V.prepareKwArgs([]string{""})
+	for k, v := range args {
+		compileKwArgs[k] = v
+	}
 
 	V.stream = V.stream.Output(OutputFilename, compileKwArgs)
 
@@ -206,20 +213,7 @@ func (V Video) SubClip(start, end float64) Video {
 }
 
 func Concat(videos []Video) (Video, error) {
-	return ConcatWithArgs(videos, map[string]string{
-		"c:v":          "libx264", // Reencode H.264
-		"r":            "30",      // Taxa uniforme de FPS
-		"crf":          "18",      // Controle de qualidade
-		"preset":       "medium",  // Preset para balancear velocidade e compactação
-		"g":            "30",      // Força keyframes a cada 30 frames (1 segundo para 30 FPS)
-		"keyint_min":   "30",      // Valor mínimo de keyframes também a cada 1 segundo
-		"sc_threshold": "0",       // Desativa a detecção automática de cenas, padronizando os keyframes
-		"pix_fmt":      "yuv420p", // Garantia de compatibilidade de reprodução
-		"c:a":          "aac",     // Codec de áudio AAC
-		"b:a":          "192k",    // Bitrate de áudio
-		"ar":           "48000",   // Taxa amostra de áudio
-		"ac":           "2",       // Stereo
-	})
+	return ConcatWithArgs(videos, map[string]string{"c": "copy"})
 }
 
 func ConcatWithArgs(videos []Video, args map[string]string) (Video, error) {
